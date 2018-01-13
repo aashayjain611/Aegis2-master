@@ -3,15 +3,12 @@ package com.example.android.spitit;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -26,7 +23,6 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 import com.google.firebase.storage.FirebaseStorage;
@@ -46,7 +42,7 @@ import static android.content.ContentValues.TAG;
 public class EmergencyPortalFragment extends MainActivity {
 
     private View mView;
-
+    private Toolbar toolbar;
     public static final String ANONYMOUS = "anonymous";
     public static final int DEFAULT_MSG_LENGTH_LIMIT = 1000;
     public static final String MESSAGE_LENGTH_KEY = "message_length";
@@ -81,6 +77,10 @@ public class EmergencyPortalFragment extends MainActivity {
         setContentView(R.layout.emergencyportal);
 
         //Initializing Firebase Object
+        toolbar=(Toolbar)findViewById(R.id.portal_toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle("Emergency Portal");
         database = FirebaseDatabase.getInstance();
         mAuth = FirebaseAuth.getInstance();
         mFirebaseStorage = FirebaseStorage.getInstance();
@@ -181,7 +181,7 @@ public class EmergencyPortalFragment extends MainActivity {
                 @Override
                 public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                     EmergencyMessage emergencyMessage = dataSnapshot.getValue(EmergencyMessage.class);
-                    if(mUserEmailId.equals(emergencyMessage.getName()) || admins.contains(emergencyMessage.getName()))
+                    if(mUserEmailId.equals(emergencyMessage.getName()) || admins.contains(emergencyMessage.getName()) || admins.contains(mUserEmailId))
                          mMessageAdapter.add(emergencyMessage);
                 }
 
